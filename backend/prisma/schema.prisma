@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  userId   String    @id @default(uuid())
+  userId   String     @id @default(uuid())
   name     String
-  email    String    @unique
+  email    String     @unique
   password String
-  role     UserRoles @default(user)
+  role     UserRoles  @default(user)
+  status   UserStatus @default(active)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,6 +48,11 @@ model Meal {
 enum UserRoles {
   admin
   user
+}
+
+enum UserStatus {
+  active
+  banned
 }
 
 enum ItemCategories {

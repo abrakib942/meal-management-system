@@ -58,6 +58,12 @@ const loginUser = async (data: any): Promise<any> => {
   if (isUserExist?.password && !decriptedPassword) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'password is incorrect');
   }
+
+  // is banned
+  if (isUserExist.status === 'banned') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'This user is currently banned');
+  }
+
   const accessToken = jwtHelpers.createToken(
     {
       userId: isUserExist?.userId,

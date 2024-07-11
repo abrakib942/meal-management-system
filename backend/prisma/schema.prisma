@@ -11,16 +11,60 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  name      String
-  email     String    @unique
-  password  String
-  role      UserRoles @default(performer)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  userId   String    @id @default(uuid())
+  name     String
+  email    String    @unique
+  password String
+  role     UserRoles @default(user)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Item {
+  itemId   String         @id @default(uuid())
+  name     String
+  category ItemCategories
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Meal      Meal[]
+}
+
+model Meal {
+  mealId       String     @id @default(uuid())
+  mealDay      MealDays
+  repeatedDays MealDays[]
+  status       MealStatus
+
+  item   Item   @relation(fields: [itemId], references: [itemId])
+  itemId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum UserRoles {
   admin
-  performer
+  user
+}
+
+enum ItemCategories {
+  Protein
+  Starch
+  Veg
+  none
+}
+
+enum MealDays {
+  Sunday
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+}
+
+enum MealStatus {
+  Completed
+  Incomplete
 }

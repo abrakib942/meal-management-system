@@ -1,13 +1,59 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
+import { paginationHelpers } from '../../../helpers/paginationHelper';
+import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 
-const getAllUsers = async () => {
-  const result = await prisma.user.findMany({});
+const getAllUsers = async (filters: any, options: IPaginationOptions) => {
+  const searchableFields = ['name', 'email'];
 
-  return result;
+  const { page, limit, skip } = paginationHelpers.calculatePagination(options);
+
+  const { searchTerm, role, status } = filters;
+  const andConditons = [];
+
+  if (searchTerm) {
+    andConditons.push({
+      OR: searchableFields.map(field => ({
+        [field]: {
+          contains: searchTerm,
+          mode: 'insensitive',
+        },
+      })),
+    });
+  }
+
+  const whereConditions: Prisma.UserWhereInput =
+    andConditons.length > 0 ? { AND: andConditons } : {};
+
+  if (role) {
+    whereConditions.role = role;
+  }
+
+  if (status) {
+    whereConditions.status = status;
+  }
+
+  const result = await prisma.user.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+  });
+
+  const total = await prisma.user.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 const getAUser = async (id: string): Promise<User | null> => {

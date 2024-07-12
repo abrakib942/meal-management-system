@@ -5,6 +5,7 @@ import SignUp from "../pages/SignUp";
 import NotFound from "../components/NotFound";
 import PrivateRoute from "../helpers/privateRoute/PrivateRoute";
 import ManageUsers from "../pages/dashboard/manageUsers/ManageUsers";
+import ManageItems from "../pages/dashboard/manageItems/ManageItems";
 
 const routes = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const routes = createBrowserRouter([
       {
         path: "/users",
         element: <ManageUsers />,
+      },
+      {
+        path: "/items",
+        element: <ManageItems />,
       },
     ],
   },

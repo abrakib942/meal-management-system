@@ -79,10 +79,10 @@ const ManageUsers = () => {
   };
 
   const columns = [
-    {
-      title: "Id",
-      dataIndex: "userId",
-    },
+    // {
+    //   title: "Id",
+    //   dataIndex: "userId",
+    // },
     {
       title: "Name",
       dataIndex: "name",
@@ -105,7 +105,7 @@ const ManageUsers = () => {
         <div
           className={`${
             data === "banned" ? "bg-red-400" : "bg-green-300"
-          } px-1 font-semibold rounded-2xl text-center`}
+          } font-semibold rounded-2xl text-center`}
         >
           {data}
         </div>

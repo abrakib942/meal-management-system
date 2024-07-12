@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { getUserInfo, removeUserInfo } from "../utils/authService";
 import CustomButton from "../components/CustomButton";
+import { useGetSingleUserQuery } from "../redux/api/userApi";
 
 const { Content } = Layout;
 const DashboardLayout = () => {
@@ -14,7 +15,9 @@ const DashboardLayout = () => {
 
   const navigate = useNavigate();
 
-  const user = getUserInfo();
+  const { userId } = getUserInfo();
+
+  const { data: userData } = useGetSingleUserQuery(userId);
 
   const logOut = () => {
     removeUserInfo("accessToken");
@@ -46,7 +49,7 @@ const DashboardLayout = () => {
             }}
           />
           <div className="text-black text-lg">
-            <p> Welcome, </p>
+            <p> Welcome, {userData?.data.name}</p>
           </div>
           <div className="">
             <CustomButton onClick={logOut} className="bg-gray-600">

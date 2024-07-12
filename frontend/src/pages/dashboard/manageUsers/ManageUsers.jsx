@@ -1,5 +1,5 @@
 import { useDebounced } from "../../../utils/debounce";
-import { Button, Input, message } from "antd";
+import { Button, Input, message, Select } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import DataTable from "../../../components/DataTable";
@@ -11,6 +11,7 @@ import {
   useUpdateUserMutation,
 } from "../../../redux/api/userApi";
 import exchange from "../../../assets/exchange.png";
+import Loading from "../../../components/Loading";
 
 const ManageUsers = () => {
   const query = {};
@@ -23,6 +24,8 @@ const ManageUsers = () => {
   const [editModal, setEditModal] = useState(false);
   const [targetedId, setTargetedId] = useState("");
   const [currentStatus, setCurrentStatus] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
 
   const [updateUser] = useUpdateUserMutation();
 
@@ -30,6 +33,9 @@ const ManageUsers = () => {
   query["page"] = page;
   query["sortBy"] = sortBy;
   query["sortOrder"] = sortOrder;
+
+  if (roleFilter) query["role"] = roleFilter;
+  if (statusFilter) query["status"] = statusFilter;
 
   const debouncedTerm = useDebounced({
     searchQuery: searchTerm,
@@ -144,30 +150,83 @@ const ManageUsers = () => {
     setSortBy("");
     setSortOrder("");
     setSearchTerm("");
+    setRoleFilter("");
+    setStatusFilter("");
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div>
       <ActionBar title={`User List (${meta?.total || 0})`}>
-        <Input
-          type="text"
-          size="large"
-          placeholder="Search User Name, Email"
-          style={{ width: "30%", marginBottom: 10 }}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-          }}
-        />
-        <div>
-          {(!!sortBy || !!sortOrder || !!searchTerm) && (
-            <Button
-              onClick={resetFilters}
-              type="primary"
-              style={{ margin: "0px 5px" }}
-            >
-              <ReloadOutlined />
-            </Button>
-          )}
+        <div className="flex items-center gap-20">
+          <div>
+            <div>Search</div>
+            <Input
+              type="text"
+              size="large"
+              placeholder="Search User Name, Email"
+              style={{ width: "100%", marginBottom: 10 }}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
+            />
+          </div>
+          <div>
+            <div className="mb-1">Filter by Role</div>
+            <Select
+              showSearch
+              style={{ width: "100%", marginBottom: 10 }}
+              placeholder="Select a Role"
+              onChange={(value) => setRoleFilter(value)}
+              options={[
+                {
+                  value: "admin",
+                  label: "admin",
+                },
+                {
+                  value: "user",
+                  label: "user",
+                },
+              ]}
+            />
+          </div>
+          <div>
+            <div className="mb-1">Filter by Status</div>
+            <Select
+              showSearch
+              style={{ width: "100%", marginBottom: 10 }}
+              placeholder="Select a Status"
+              onChange={(value) => setStatusFilter(value)}
+              options={[
+                {
+                  value: "active",
+                  label: "active",
+                },
+                {
+                  value: "banned",
+                  label: "banned",
+                },
+              ]}
+            />
+          </div>
+          <div>
+            {(!!sortBy ||
+              !!sortOrder ||
+              !!searchTerm ||
+              !!roleFilter ||
+              statusFilter) && (
+              <Button
+                onClick={resetFilters}
+                type="primary"
+                style={{ margin: "0px 5px" }}
+              >
+                <ReloadOutlined />
+              </Button>
+            )}
+          </div>
         </div>
       </ActionBar>
 

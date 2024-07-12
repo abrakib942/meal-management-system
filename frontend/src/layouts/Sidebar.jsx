@@ -27,7 +27,7 @@ const Sidebar = ({ collapsed }) => {
       />
       <p className="font-semibold">Menu</p>
       {role === "admin" ? (
-        <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}>
+        <Menu theme="light" mode="inline">
           <Menu.Item key="1">
             <Link to="/users">Manage Users</Link>
           </Menu.Item>
@@ -42,7 +42,7 @@ const Sidebar = ({ collapsed }) => {
           </Menu.Item>
         </Menu>
       ) : (
-        <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}>
+        <Menu theme="light" mode="inline">
           <Menu.Item key="1">
             <Link to="/order">Meal Order</Link>
           </Menu.Item>

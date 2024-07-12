@@ -29,17 +29,27 @@ model Item {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  meal      Meal[]
+
+  meals MealItem[]
 }
 
 model Meal {
   mealId       String     @id @default(uuid())
   mealDay      MealDays
-  repeatedDays MealDays[]
+  repeatedDays MealDays?
   status       MealStatus
 
-  item   Item   @relation(fields: [itemId], references: [itemId])
-  itemId String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  items     MealItem[]
+}
+
+model MealItem {
+  mealItemId String @id @default(uuid())
+  meal       Meal   @relation(fields: [mealId], references: [mealId])
+  mealId     String
+  item       Item   @relation(fields: [itemId], references: [itemId])
+  itemId     String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

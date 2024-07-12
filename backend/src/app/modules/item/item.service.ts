@@ -9,7 +9,7 @@ const createItem = (typeData: Item): Promise<Item> => {
   const result = prisma.item.create({
     data: typeData,
     include: {
-      meal: true,
+      meals: true,
     },
   });
 
@@ -44,7 +44,12 @@ const getAllItems = async (filters: any, options: IPaginationOptions) => {
 
   const result = await prisma.item.findMany({
     include: {
-      meal: true,
+      meals: {
+        select: {
+          itemId: true,
+          meal: true,
+        },
+      },
     },
     where: whereConditions,
     skip,
@@ -71,7 +76,12 @@ const getAItem = async (id: string): Promise<Item | null> => {
       itemId: id,
     },
     include: {
-      meal: true,
+      meals: {
+        select: {
+          itemId: true,
+          meal: true,
+        },
+      },
     },
   });
   return result;
@@ -87,7 +97,7 @@ const updateItem = async (
     },
     data: payload,
     include: {
-      meal: true,
+      meals: true,
     },
   });
   return result;
@@ -99,7 +109,7 @@ const deleteItem = async (id: string): Promise<Item> => {
       itemId: id,
     },
     include: {
-      meal: true,
+      meals: true,
     },
   });
   return result;

@@ -25,9 +25,9 @@ const Sidebar = ({ collapsed }) => {
         src={logo}
         alt=""
       />
-      <p className="font-semibold">Menu</p>
+      <p className="">Menu</p>
       {role === "admin" ? (
-        <Menu theme="light" mode="inline">
+        <Menu className="font-semibold" theme="light" mode="inline">
           <Menu.Item key="1">
             <Link to="/users">Manage Users</Link>
           </Menu.Item>

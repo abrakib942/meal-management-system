@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import { Col, Row, message } from "antd";
+import { Card, Col, Row, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
 import loginImage from "../assets/Login.png";
@@ -57,6 +57,12 @@ const Login = () => {
         <img src={loginImage} width={400} alt="login image" />
       </Col>
       <Col sm={12} md={8} lg={8}>
+        <Card className="w-1/2 h-1/2 flex flex-col gap-0" hoverable>
+          <p className="font-bold">admin Login Credential:</p>
+          <p>Email: admin@gmail.com </p>
+          <p>Email: admin2@gmail.com </p>
+          <p>pass: 123456</p>
+        </Card>
         <h1
           style={{
             margin: "15px 0px",

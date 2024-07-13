@@ -1,5 +1,5 @@
 import { useDebounced } from "../../../utils/debounce";
-import { Button, Form, Input, message, Select } from "antd";
+import { Button, Input, message, Select } from "antd";
 import {
   ReloadOutlined,
   DeleteOutlined,
@@ -13,13 +13,13 @@ import {} from "../../../redux/api/userApi";
 
 import Loading from "../../../components/Loading";
 import {
-  useCreateItemMutation,
   useDeleteItemMutation,
   useGetAllItemsQuery,
-  useUpdateItemMutation,
 } from "../../../redux/api/itemApi";
 import CustomButton from "../../../components/CustomButton";
 import CustomModal from "../../../components/CustomModal";
+import CreateItem from "./CreateItem";
+import EditItem from "./EditItem";
 
 const ManageItems = () => {
   const query = {};
@@ -31,20 +31,14 @@ const ManageItems = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [createModal, setCreateModal] = useState("");
+
   const [editModal, setEditModal] = useState("");
   const [deleteModal, setDeleteModal] = useState("");
-  const [addItemInput, setAddItemInput] = useState("");
-  const [selectCategory, setSelectCategory] = useState("");
-  const [editItemName, setEditItemName] = useState("");
-  const [editItemCategory, setEditItemCategory] = useState("");
+
   const [itemId, setItemId] = useState("");
   const [currentRecord, setCurrentRecord] = useState("");
 
-  const [createItem] = useCreateItemMutation();
-  const [updateItem] = useUpdateItemMutation();
   const [deleteItem] = useDeleteItemMutation();
-
-  const [form] = Form.useForm();
 
   query["limit"] = size;
   query["page"] = page;
@@ -141,54 +135,6 @@ const ManageItems = () => {
     setCategoryFilter("");
   };
 
-  const handleCreate = async () => {
-    try {
-      await form.validateFields();
-
-      const payloadObj = {
-        name: addItemInput,
-        category: selectCategory,
-      };
-
-      const res = await createItem(payloadObj);
-
-      if (res?.data) {
-        message.success(res?.data.message);
-        setCreateModal(false);
-        form.resetFields();
-      } else {
-        message.error("Failed to create, try again");
-      }
-    } catch (error) {
-      message.error("Please fill in all required fields");
-    }
-  };
-
-  const handleEdit = async () => {
-    try {
-      await form.validateFields();
-
-      const payloadObj = {
-        name: editItemName,
-        category: editItemCategory,
-      };
-
-      const res = await updateItem({ itemId, data: payloadObj });
-
-      if (res?.data) {
-        message.success(res?.data.message);
-        setEditModal(false);
-        form.resetFields();
-        setEditItemName("");
-        setEditItemCategory("");
-      } else {
-        message.error("Failed to update, try again");
-      }
-    } catch (error) {
-      message.error("Please fill in all required fields");
-    }
-  };
-
   const handleDelete = async (itemId) => {
     message.loading("Deleting.....");
     console.log("res", itemId);
@@ -277,97 +223,15 @@ const ManageItems = () => {
         showPagination={true}
       />
       {/* Create Item Modal */}
-      <CustomModal
-        title={`Create Item`}
-        isOpen={createModal}
-        closeModal={() => {
-          setCreateModal(false);
-          form.resetFields();
-        }}
-        handleOk={handleCreate}
-      >
-        <Form form={form}>
-          <Form.Item
-            label="Item Name"
-            name="name"
-            rules={[{ required: true, message: "Please enter Item Name" }]}
-          >
-            <Input
-              type="text"
-              size="large"
-              onChange={(e) => setAddItemInput(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Select Category"
-            name="category"
-            rules={[{ required: true, message: "Please select a Category" }]}
-          >
-            <Select
-              showSearch
-              style={{ width: "100%", marginBottom: 10 }}
-              placeholder="Select a Category"
-              onChange={(value) => setSelectCategory(value)}
-              options={[
-                { value: "Protein", label: "Protein" },
-                { value: "Starch", label: "Starch" },
-                { value: "Veg", label: "Veg" },
-                { value: "none", label: "none" },
-              ]}
-            />
-          </Form.Item>
-        </Form>
-      </CustomModal>
+      <CreateItem createModal={createModal} setCreateModal={setCreateModal} />
 
       {/* Edit Modal */}
-      <CustomModal
-        title={`Edit Item`}
-        isOpen={editModal}
-        closeModal={() => {
-          setEditModal(false);
-          refetch();
-          form.resetFields();
-        }}
-        handleOk={() => handleEdit(itemId)}
-      >
-        <Form
-          form={form}
-          initialValues={{
-            name: currentRecord?.name,
-            category: currentRecord?.category,
-          }}
-        >
-          <Form.Item
-            label="Item Name"
-            name="name"
-            rules={[{ required: true, message: "Please enter Item Name" }]}
-          >
-            <Input
-              type="text"
-              size="large"
-              onChange={(e) => setEditItemName(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Select Category"
-            name="category"
-            rules={[{ required: true, message: "Please select a Category" }]}
-          >
-            <Select
-              showSearch
-              style={{ width: "100%", marginBottom: 10 }}
-              placeholder="Select a Category"
-              onChange={(value) => setEditItemCategory(value)}
-              options={[
-                { value: "Protein", label: "Protein" },
-                { value: "Starch", label: "Starch" },
-                { value: "Veg", label: "Veg" },
-                { value: "none", label: "none" },
-              ]}
-            />
-          </Form.Item>
-        </Form>
-      </CustomModal>
+      <EditItem
+        setEditModal={setEditModal}
+        editModal={editModal}
+        currentRecord={currentRecord}
+        itemId={itemId}
+      />
 
       {/* Delete Modal */}
       <CustomModal

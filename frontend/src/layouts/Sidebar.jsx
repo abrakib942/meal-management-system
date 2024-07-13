@@ -37,9 +37,9 @@ const Sidebar = ({ collapsed }) => {
           <Menu.Item key="3">
             <Link to="/meals">Meals</Link>
           </Menu.Item>
-          <Menu.Item key="4">
+          {/* <Menu.Item key="4">
             <Link to="/schedule">Meal Schedule</Link>
-          </Menu.Item>
+          </Menu.Item> */}
         </Menu>
       ) : (
         <Menu theme="light" mode="inline">

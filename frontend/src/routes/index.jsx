@@ -6,6 +6,8 @@ import NotFound from "../components/NotFound";
 import PrivateRoute from "../helpers/privateRoute/PrivateRoute";
 import ManageUsers from "../pages/dashboard/manageUsers/ManageUsers";
 import ManageItems from "../pages/dashboard/manageItems/ManageItems";
+import ManageMeal from "../pages/dashboard/manageMeal/ManageMeal";
+import MealOrder from "../pages/dashboard/orderMeal/MealOrder";
 
 const routes = createBrowserRouter([
   {
@@ -23,6 +25,14 @@ const routes = createBrowserRouter([
       {
         path: "/items",
         element: <ManageItems />,
+      },
+      {
+        path: "/meals",
+        element: <ManageMeal />,
+      },
+      {
+        path: "/order",
+        element: <MealOrder />,
       },
     ],
   },

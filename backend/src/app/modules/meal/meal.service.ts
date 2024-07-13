@@ -179,12 +179,23 @@ const updateMeal = async (id: string, payload: any): Promise<Meal> => {
     where: {
       mealId: id,
     },
+    include: {
+      items: true,
+    },
   });
 
   if (!existingMeal) {
     throw new ApiError(BAD_REQUEST, `Meal with id ${id} does not exist.`);
   }
 
+  // Delete the existing items
+  await prisma.mealItem.deleteMany({
+    where: {
+      mealId: id,
+    },
+  });
+
+  // Update the meal and create new items
   const result = await prisma.meal.update({
     where: {
       mealId: id,
@@ -192,9 +203,9 @@ const updateMeal = async (id: string, payload: any): Promise<Meal> => {
     data: {
       ...payload,
       items: {
-        connect:
+        create:
           payload.items?.map((itemId: string) => ({
-            itemId,
+            item: { connect: { itemId } },
           })) || [],
       },
     },

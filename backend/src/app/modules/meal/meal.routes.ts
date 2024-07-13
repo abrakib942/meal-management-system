@@ -12,8 +12,16 @@ router.post(
   MealController.createMeal
 );
 
-router.get('/', auth(ENUM_USER_ROLE.ADMIN), MealController.getAllMeals);
-router.get('/:id', auth(ENUM_USER_ROLE.ADMIN), MealController.getAMeal);
+router.get(
+  '/',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  MealController.getAllMeals
+);
+router.get(
+  '/:id',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  MealController.getAMeal
+);
 
 router.patch('/:id', auth(ENUM_USER_ROLE.ADMIN), MealController.updateMeal);
 router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), MealController.deleteMeal);
